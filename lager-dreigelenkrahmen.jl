@@ -172,6 +172,10 @@ A\(B*[F1;F2;F3])
 # ╔═╡ 85e56034-edad-46c3-98e5-10031524bba8
 md"""
 ### Schritt 5: Diskussion des Ergebnisses
+
+Was passiert, wenn die beiden Höhen, ``h_1`` und ``h_2`` mit einem Faktor ``\chi`` skaliert werden? In anderen Worten: Die beiden Höhen sollen beide halbiert oder verdoppelt oder mit einem anderen Faktor gestaucht oder gestreckt werden. Bleibt das System stets statisch bestimmt?
+
+
 Statische Bestimmtheit vs. reguläre Matrix"""
 
 # ╔═╡ bc4adb21-cea4-4d4f-ad38-156d8c78a24f
@@ -186,7 +190,7 @@ A_skal(χ) = [0 0 0 0 -h1*χ l1; 1 0 0 0 1 0; 0 1 0 0 0 1; 0 0 0 0 h2*χ l2; 0 0
 detA(χ) = det(A_skal(χ))
 
 # ╔═╡ c84125f0-f76e-41bd-aefd-6b61d53aea4c
-plot(-1:0.1:1,det,label=false)
+plot(-1:0.1:1,det,label=false,xlabel="χ",ylabel="det A",size=(600,300),lw=2)
 
 # ╔═╡ 1f0dab4d-9dfb-4a9b-a60c-8088c6d00338
 B_skal(χ) = [-0.5*h1*χ 0 0.5*l1; 1 0 0; 0 0 1; 0 h2*cos(α) 0; 0 -cos(α) 0; 0 sin(α) 0]
@@ -214,6 +218,9 @@ end
 
 # ╔═╡ 794d544c-0ac5-4b6f-aa22-eaa421a5d725
 plot(-1:0.015:1,[s->f(s,1),s->f(s,2)],label=["Lager A" "Lager B"],lw=[3 1])
+
+# ╔═╡ c2b3feb6-c5cc-4a9d-8f8a-f73fa0d837d7
+md"""Für ``\chi=0`` werden die Lagerreaktionen unendlich groß. Im Diagramm wurde die 0 ausgespart."""
 
 # ╔═╡ 1be08e01-6da1-4be4-8966-51f7092014ef
 rank(A_skal(0.0))
@@ -1320,6 +1327,7 @@ version = "1.4.1+1"
 # ╠═d293653a-8b00-4f1f-8837-91a777785eda
 # ╠═762c936d-9477-411f-b8bd-d97dfb2619bf
 # ╠═794d544c-0ac5-4b6f-aa22-eaa421a5d725
+# ╠═c2b3feb6-c5cc-4a9d-8f8a-f73fa0d837d7
 # ╠═1be08e01-6da1-4be4-8966-51f7092014ef
 # ╠═77583585-006f-402c-90ca-38c9a0c803ec
 # ╟─00000000-0000-0000-0000-000000000001
