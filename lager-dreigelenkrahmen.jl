@@ -82,6 +82,7 @@ Zur Erinnerung: Statische Bestimmtheit bezieht sich auf das System unabhängig v
 # ╔═╡ 5ae8f60f-aa4a-4f8e-8bb6-02ff8c9a26a1
 md"""
 ### Schritt 3: Übertragen der Gleichungen in Computercode (Matrixform)
+#### Koeffizientenmatrix
 Die Koeffizientenmatrix ``\mathbf{A}`` enthält die Informationen, mit welchen Koeffizienten (Vorfaktoren) die einzelnen Unbekannten in welchen Gleichungen auftauchen. Sie enthält häufig bei dieser Art von Problem vielen Nullen.
 
 ```math
@@ -96,14 +97,27 @@ Die Koeffizientenmatrix ``\mathbf{A}`` enthält die Informationen, mit welchen K
 A = [0 0 0 0 -h1 l1; 1 0 0 0 1 0; 0 1 0 0 0 1; 0 0 0 0 h2 l2; 0 0 1 0 -1 0; 0 0 0 1 0 -1]
 
 # ╔═╡ 95ab5197-ba90-4b34-a2e9-79002a810c5e
-md"""Der Befehl `rank` gibt uns den Rang der Koeffizientenmatrix an. Hier gilt ``
-\mathrm{rank}(\mathbf{A})=`` $(rank(A)). Rang 6 bedeutet bei sechs Gleichungen, dass alle Gleichungen unabhängig voneinander sind."""
+md"""
+Wir wollen im nun den Rang und die Determinante der Koeffizientenmatrix bestimmen. Von Hand wären das durchaus aufwändige Berechnungen. Mit Julia gelingt es mit jeweils einer einfachen Zeile Code.
+
+Der Befehl `rank` gibt uns den Rang der Koeffizientenmatrix an. Hier gilt ``
+\mathrm{rank}(\mathbf{A})=`` $(rank(A)). Rang 6 bedeutet bei sechs Gleichungen, dass alle Gleichungen unabhängig voneinander sind.
+Die Determinante ist von Null verschieden. Beide Aussagen, zum Rang und zur Determinante, zeigen, dass die Koeffizientenmatrix regulär ist. Ein lineares Gleichungssystem mit einer solchen Koeffizientenmatrix ist eindeutig lösbar.
+"""
+
+# ╔═╡ c2923f3e-4901-4bd7-8d8b-92999fc2eb5f
+md"""Die Aussage zur eindeutigen Lösbarkeit des Gleichungssystem und die Aussage zur statischen Bestimmheit sind zwei Seiten einer Medaille!"""
 
 # ╔═╡ 1eb64930-200e-40fa-9cb4-cc4c88382848
 rank(A)
 
+# ╔═╡ c71e4b98-3c82-4799-99db-3d70d654ab20
+det(A)
+
 # ╔═╡ 15e893fa-20d3-4c41-952b-dac89df21662
-md"""Häufig wird man alle eingeprägten Kräfte in einer Spaltenmatrix ``\mathbf{b}`` zusammenfassen ("rechte Seite"). Alternativ kann man bei ``n`` eingeprägten Kräften und ``m`` Gleichungen die rechte Seite auch als ``m\times n``-Matrix ``\mathbf{B}`` schreiben, wobei jede Spalte einer eingeprägten Kraft zugeordnet ist. Im vorliegenden Fall gibt es drei eingeprägte Kräfte, so dass die rechte Seite sich in der Form
+md"""
+#### Rechte Seite
+Häufig wird man alle eingeprägten Kräfte in einer Spaltenmatrix ``\mathbf{b}`` zusammenfassen ("rechte Seite"). Alternativ kann man bei ``n`` eingeprägten Kräften und ``m`` Gleichungen die rechte Seite auch als ``m\times n``-Matrix ``\mathbf{B}`` schreiben, wobei jede Spalte einer eingeprägten Kraft zugeordnet ist. Im vorliegenden Fall gibt es drei eingeprägte Kräfte, so dass die rechte Seite sich in der Form
 
 ```math
 \mathbf{B} =
@@ -128,15 +142,6 @@ B = [-0.5*h1 0 0.5*l1; 1 0 0; 0 0 1; 0 h2*cos(α) 0; 0 -cos(α) 0; 0 sin(α) 0]
 
 # ╔═╡ 884fd01c-500a-4311-8c25-80e922952d47
 b = B*[F1;F2;F3]
-
-# ╔═╡ c3c879af-00aa-4101-8912-80a8f6743333
-md"""Nun bestimmen wir den Rang der Matrix ``(\mathbf{A} | \mathbf{b})``, die durch Nebeneinandersetzen von ``\mathbf{A}`` und ``\mathbf{b}`` entsteht (Befehl `hcat` in Julia). Wenn der Rang dieser Matrix ebenfalls 6 ist, ist das lineare Gleichungssystem eindeutig lösbar. Es gibt keine freie Variable."""
-
-# ╔═╡ ac014df4-7157-4fd6-9514-708ae9c893d2
-rank(hcat(A,b))
-
-# ╔═╡ c2923f3e-4901-4bd7-8d8b-92999fc2eb5f
-md"""Die Aussage zur eindeutigen Lösbarkeit des Gleichungssystem und die Aussage zur statischen Bestimmheit sind zwei Seiten einer Medaille!"""
 
 # ╔═╡ 7ec2dfde-39c7-4533-aa70-7636d4f4d4d1
 md"""
@@ -169,19 +174,23 @@ md"""Alternativ kann auch zuerst ``\mathbf{B}`` mit der Spaltenmatrix ``\{F_1,F_
 # ╔═╡ a6466b41-9f16-4c4b-a9f0-fb67cf0ddf3d
 A\(B*[F1;F2;F3])
 
+# ╔═╡ 6e3156b7-22a6-4f7f-9104-fbc330e46534
+md"""Aus den Komponenten können die Beträge der Lagerreaktionen in A, B und C berechnet werden. Wir tun dies weiter unten im Rahmen einer weiterführenden Überlegung."""
+
 # ╔═╡ 85e56034-edad-46c3-98e5-10031524bba8
 md"""
-### Schritt 5: Diskussion des Ergebnisses
+### Schritt 5: Weiterführende Überlegungen
 
-Was passiert, wenn die beiden Höhen, ``h_1`` und ``h_2`` mit einem Faktor ``\chi`` skaliert werden? In anderen Worten: Die beiden Höhen sollen beide halbiert oder verdoppelt oder mit einem anderen Faktor gestaucht oder gestreckt werden. Bleibt das System stets statisch bestimmt?
+Was passiert, wenn die beiden Höhen, ``h_1`` und ``h_2`` mit einem Faktor ``\chi`` skaliert werden? In anderen Worten: Die beiden Höhen sollen beide halbiert oder verdoppelt oder mit einem anderen Faktor gestaucht oder gestreckt werden. 
+Skalierungsfaktor 0 heißt, dass alle drei Lager, A, B und C, auf einer horizontalen Linie liegen.
 
-
-Statische Bestimmtheit vs. reguläre Matrix"""
+Bleibt das System stets statisch bestimmt?"""
 
 # ╔═╡ bc4adb21-cea4-4d4f-ad38-156d8c78a24f
 md"""
-Verweise auf die entsprechenden Kapitel oder Abschnitte in Meyberg und Vachenauer und bei Papula.
-Untersuche die Determinante von A als Funktion von h1 bzw. h2. Wenn beide Null sind, dann gibt es ein Problem."""
+#### Determinante und Rang
+Wir definieren die Koeffizientenmatrix ``\mathbf{A}`` als Funktion des Skalierungsfaktors ``\chi``
+und erstellen ein Diagramm, das die Determinante der Koeffizientenmatrix als Funktion des Skalierungsfaktors ``\chi`` zeigt."""
 
 # ╔═╡ baf12a1c-5a3e-493b-bbeb-fa858ccf3766
 A_skal(χ) = [0 0 0 0 -h1*χ l1; 1 0 0 0 1 0; 0 1 0 0 0 1; 0 0 0 0 h2*χ l2; 0 0 1 0 -1 0; 0 0 0 1 0 -1]
@@ -190,16 +199,39 @@ A_skal(χ) = [0 0 0 0 -h1*χ l1; 1 0 0 0 1 0; 0 1 0 0 0 1; 0 0 0 0 h2*χ l2; 0 0
 detA(χ) = det(A_skal(χ))
 
 # ╔═╡ c84125f0-f76e-41bd-aefd-6b61d53aea4c
-plot(-1:0.1:1,det,label=false,xlabel="χ",ylabel="det A",size=(600,300),lw=2)
+plot(-1:0.1:1,detA,label=false,xlabel="χ",ylabel="det A",size=(600,300),lw=2)
+
+# ╔═╡ aaf79993-cde0-4d5a-a263-8a7be7b6ed01
+md"""Fazit: Für den Skalierungsfaktor 0 ist die Determinante 0. Ansonsten ist die Determinate ungleich 0. Für ``\chi=0`` ist die Koeffizientenmatrix demnach singulär. Das ergibt sich auch, wenn der Rang der Matrix berechnet wird. Für den Rang ergibt sich $(rank(A_skal(0.0)))."""
+
+# ╔═╡ 1be08e01-6da1-4be4-8966-51f7092014ef
+rank(A_skal(0.0))
+
+# ╔═╡ c672528f-6dc0-4561-83bb-574f0169404d
+md"""Auch die rechte Seite wird in Abhängigkeit vom Skalierungsfaktor ``\chi`` formuliert."""
 
 # ╔═╡ 1f0dab4d-9dfb-4a9b-a60c-8088c6d00338
 B_skal(χ) = [-0.5*h1*χ 0 0.5*l1; 1 0 0; 0 0 1; 0 h2*cos(α) 0; 0 -cos(α) 0; 0 sin(α) 0]
 
-# ╔═╡ e1e62bba-cf78-400c-b28a-99c8fd828266
-F
+# ╔═╡ c3c879af-00aa-4101-8912-80a8f6743333
+md"""
+Nun bestimmen wir den Rang der Matrix ``(\mathbf{A} | \mathbf{b})``, die durch Nebeneinandersetzen von ``\mathbf{A}`` und ``\mathbf{b}`` entsteht (Befehl `hcat` in Julia). Wenn der Rang dieser Matrix 6 ist, ist das lineare Gleichungssystem nicht lösbar. Wenn der Rang 5 ist, gibt es unendliche viele Lösungen mit einer freien Variable."""
+
+# ╔═╡ 35673480-3f93-423a-b2b1-788517eb0c0b
+hcat(A_skal(0.0),B_skal(0.0)*[F1;F2;F3])
+
+# ╔═╡ b09ea6c4-48e4-40d0-a4bd-cceffd1ce0b6
+rank(hcat(A_skal(0.0),B_skal(0.0)*[F1;F2;F3]))
+
+# ╔═╡ 92d8cb5a-1c10-4ff6-85ac-be8dc41ac576
+md"""Für ``\chi=0`` ist das lineare Gleichungssystem nicht lösbar. Das entspricht der Tatsache, dass bei diesem Wert des Skalierungsfaktors die statische Bestimmtheit nicht mehr gegeben ist. Wie man leicht einsieht, gibt es in diesem Grenzfall eine infinitesimale Bewegungsmöglichkeit des Rahmens."""
 
 # ╔═╡ d293653a-8b00-4f1f-8837-91a777785eda
-md"""Zeige auch die Lagerreaktionen in Abhängigkeit von χ"""
+md"""
+#### Lagerreaktionen in Abhängigkeit vom Skalierungsfaktor
+Zum Schluss betrachten wir die Lagerreaktionen in Abhängigkeit von χ.
+
+Die untenstehende Funktion kann die Lagerreaktionen in den Punkten A, B und C in Abhängigkeit vom Wert ``\chi`` zurückliefern; entweder den Betrag der Lagerkraft oder die skalarwertige ``x``-Komponente."""
 
 # ╔═╡ 762c936d-9477-411f-b8bd-d97dfb2619bf
 function f(χ,k::Int64;betrag::Bool=true)
@@ -217,16 +249,10 @@ function f(χ,k::Int64;betrag::Bool=true)
 end
 
 # ╔═╡ 794d544c-0ac5-4b6f-aa22-eaa421a5d725
-plot(-1:0.015:1,[s->f(s,1),s->f(s,2)],label=["Lager A" "Lager B"],lw=[3 1])
+scatter(-0.3:0.11:1,[s->f(s,1),s->f(s,2)],label=["Lager A" "Lager B"], xlabel="χ",ylabel="Betrag Lagerkraft [kN]",size=(600,350))
 
 # ╔═╡ c2b3feb6-c5cc-4a9d-8f8a-f73fa0d837d7
 md"""Für ``\chi=0`` werden die Lagerreaktionen unendlich groß. Im Diagramm wurde die 0 ausgespart."""
-
-# ╔═╡ 1be08e01-6da1-4be4-8966-51f7092014ef
-rank(A_skal(0.0))
-
-# ╔═╡ 77583585-006f-402c-90ca-38c9a0c803ec
-rank(hcat(A_skal(0.0),B_skal(0.0)))
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1304,31 +1330,35 @@ version = "1.4.1+1"
 # ╟─5ae8f60f-aa4a-4f8e-8bb6-02ff8c9a26a1
 # ╠═a19b755d-c4ba-44f3-9d79-41fea197e44a
 # ╟─95ab5197-ba90-4b34-a2e9-79002a810c5e
+# ╟─c2923f3e-4901-4bd7-8d8b-92999fc2eb5f
 # ╠═1eb64930-200e-40fa-9cb4-cc4c88382848
+# ╠═c71e4b98-3c82-4799-99db-3d70d654ab20
 # ╟─15e893fa-20d3-4c41-952b-dac89df21662
 # ╠═6cf91eb8-153f-468a-a91a-36c77d93bb8c
 # ╠═884fd01c-500a-4311-8c25-80e922952d47
-# ╟─c3c879af-00aa-4101-8912-80a8f6743333
-# ╠═ac014df4-7157-4fd6-9514-708ae9c893d2
-# ╟─c2923f3e-4901-4bd7-8d8b-92999fc2eb5f
 # ╟─7ec2dfde-39c7-4533-aa70-7636d4f4d4d1
 # ╠═3cd1e5dd-f415-4887-a623-14184b5278df
 # ╟─edf9ca16-780f-4e34-9442-b3d8b92b5337
 # ╠═17199777-dd6e-4c00-9d82-2cd7109be17b
 # ╟─959d3223-0a37-49bb-af89-219f97a21994
 # ╠═a6466b41-9f16-4c4b-a9f0-fb67cf0ddf3d
-# ╠═85e56034-edad-46c3-98e5-10031524bba8
-# ╠═bc4adb21-cea4-4d4f-ad38-156d8c78a24f
+# ╟─6e3156b7-22a6-4f7f-9104-fbc330e46534
+# ╟─85e56034-edad-46c3-98e5-10031524bba8
+# ╟─bc4adb21-cea4-4d4f-ad38-156d8c78a24f
 # ╠═baf12a1c-5a3e-493b-bbeb-fa858ccf3766
 # ╠═fc4dcff4-cd1c-48f9-8487-a6e0702c31c7
 # ╠═c84125f0-f76e-41bd-aefd-6b61d53aea4c
+# ╟─aaf79993-cde0-4d5a-a263-8a7be7b6ed01
+# ╠═1be08e01-6da1-4be4-8966-51f7092014ef
+# ╟─c672528f-6dc0-4561-83bb-574f0169404d
 # ╠═1f0dab4d-9dfb-4a9b-a60c-8088c6d00338
-# ╠═e1e62bba-cf78-400c-b28a-99c8fd828266
-# ╠═d293653a-8b00-4f1f-8837-91a777785eda
+# ╟─c3c879af-00aa-4101-8912-80a8f6743333
+# ╠═35673480-3f93-423a-b2b1-788517eb0c0b
+# ╠═b09ea6c4-48e4-40d0-a4bd-cceffd1ce0b6
+# ╟─92d8cb5a-1c10-4ff6-85ac-be8dc41ac576
+# ╟─d293653a-8b00-4f1f-8837-91a777785eda
 # ╠═762c936d-9477-411f-b8bd-d97dfb2619bf
 # ╠═794d544c-0ac5-4b6f-aa22-eaa421a5d725
-# ╠═c2b3feb6-c5cc-4a9d-8f8a-f73fa0d837d7
-# ╠═1be08e01-6da1-4be4-8966-51f7092014ef
-# ╠═77583585-006f-402c-90ca-38c9a0c803ec
+# ╟─c2b3feb6-c5cc-4a9d-8f8a-f73fa0d837d7
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
