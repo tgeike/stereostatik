@@ -32,7 +32,7 @@ q(x) = q0*sqrt(1-x/L)
 md"""Im Allgemeinen macht es Sinn, zu untersuchende Funktionen zu plotten. Dies geschieht in Julia mühelos mit dem Befehl `plot` aus dem Paket `Plots`."""
 
 # ╔═╡ 1e9902a2-478e-4880-b038-0ae46f9d755c
-plot(0:0.005*L:L,q,label=false,xlabel="x [m]",ylabel="q [kN/m]",w=2)
+plot(0:0.005*L:L,q,label=false,xlabel="x [m]",ylabel="q [kN/m]",w=2,size=(500,300))
 
 # ╔═╡ 8e8d6528-f569-497a-8df8-ebc2a2c1ac7a
 md"""
@@ -46,7 +46,7 @@ Für das resultierende Moment bezüglich des Koordinatenursprungs O gilt
 M_\mathrm{res}^{(\mathrm{O})} = \int_0^L x\, q(x)\,\mathrm{d}x\;.
 ```
 
-> Bestimmen Sie beide Integrale analytisch und vergleichen Sie mit dem unten stehenden Ergebnis.
+> Bestimmen Sie beide Integrale analytisch und vergleichen Sie mit dem unten stehenden Ergebnis. Entscheiden Sie selbst, ob Sie ohne Hilfsmittel oder mit Computeralgebra-Unterstützung rechnen.
 """
 
 # ╔═╡ b5f82942-c042-43a6-a6f8-037822e30aff
@@ -59,7 +59,7 @@ md"""Die resultierende Kraft der Streckenlast im betrachteten Intervall ist $(ro
 MresO_analyt = 4/15*q0*L^2
 
 # ╔═╡ d4ee67b6-4599-48ea-9caa-8e570d1e4eef
-md"""Das resultierende Moment der Streckenlast bezüglich O ist $(round(MresO_analyt,digits=3)) kN m."""
+md"""Das resultierende Moment der Streckenlast bezüglich O ist $(round(MresO_analyt*1000,digits=1)) N m."""
 
 # ╔═╡ fd4e9591-a07d-448d-9691-706992b07d7d
 md"""
@@ -67,11 +67,17 @@ md"""
 
 Wir wollen die Integrale im Folgenden numerisch bestimmen. Dazu kann beispielsweise das Paket `QuadGK` genutzt werden. Integration wird häufig auch *Quadratur* genannt, sowohl im Deutschen, als auch im Englischen (dann natürlich *quadrature*). Daher tragen viele Pakete im Bereich Integration *quad* im Namen. GK in `QuadGK` verweist auf Gauß und Kronrod. Informationen zum Paket finden sich auf der [QuadGk.jl-Website](https://juliamath.github.io/QuadGK.jl/stable/)."""
 
+# ╔═╡ df2493cf-2908-4c32-ae04-2f1e5cbe4402
+md"""Resultierende Kraft"""
+
 # ╔═╡ a63c7421-b650-4497-b527-0e4d474c5a2b
 Fres, error1 = quadgk(q, 0, L)
 
 # ╔═╡ 7397fe1b-488f-4134-89c2-0b8214ff70f3
 Fres
+
+# ╔═╡ 7f2a18b2-696c-49a3-8748-945d3521a2c4
+md"""Resultierendes Moment bezüglich O"""
 
 # ╔═╡ 5f0704ec-5f41-4a4f-8e16-f89f81ef103d
 MresO, error2 = quadgk(x -> x*q(x), 0, L)
@@ -98,7 +104,72 @@ md"""Die Wirkungslinie der resultierenden Kraft liegt $(round(xres,digits=3)) m 
 
 # ╔═╡ 9b842be6-f918-4cde-99b3-b7b487fdb4b8
 md"""
-### Numerische Integration - selbstprogrammiert"""
+### Numerische Integration - selbstprogrammiert
+In der Schule wird Integration als Mittel zur Berechnung des Flächeninhalts unter einer Kurve eingeführt. Dazu werden beispielsweise Rechtecke genutzt, um den Flächeninhalt anzunähern. Das Integral kann dann als Grenzwert dieser Annäherung durch Rechtecke definiert werden.
+
+Wir wollen im Folgenden diese Annäherung durch Rechtecke durchführen. Anders als in der Schule müssen wir uns nicht auf einige wenige Rechtecke beschränken."""
+
+# ╔═╡ 6137c0e0-7f2d-406f-8d72-fb737c3646e7
+md"""Wir wollen entlang der ``x``-Achse Punkte gleichmäßig verteilen. Dazu nutzen wir den Befehl `LinRange`."""
+
+# ╔═╡ ca821a65-e65c-41bd-ba67-37031b0761f6
+x_tab = LinRange(0,L,31)
+
+# ╔═╡ 16317d9e-3bca-4f98-a8fd-b928eddc73a5
+md"""Im gewählten Beispiel nutzen wir $(length(x_tab)) Punkte. Das führt auf $(length(x_tab)-1) Rechtecke, die im unten stehenden Bild gezeigt sind."""
+
+# ╔═╡ 7086637b-5776-446a-99f9-7cb66ba96503
+rectangle(w, h, x, y) = Shape(x .+ [0,w,w,0], y .+ [0,0,h,h])
+
+# ╔═╡ e556c8ca-bbbe-4fb3-8fce-a769cfced0de
+begin
+	plot(0:0.002*L:L,q,label=false,xlabel="x [m]",ylabel="q [kN/m]",w=2)	
+	for j = 1:length(x_tab)-1
+		plot!(rectangle(x_tab[j+1]-x_tab[j],q(x_tab[j+1]),x_tab[j],0),opacity=0.5,label=false)
+	end
+	scatter!(x_tab,q.(x_tab),label=false)
+end
+
+# ╔═╡ 020c2473-1eda-432d-89b2-e936d4142aba
+md"""Die Funktion ``q`` ist streng monoton fallend. Wenn wir in jedem Abschnitt den rechten Funktionswert für die Höhe des Rechtecks nutzen, haben wir ausschließlich Rechtecke unterhalb der Kurve. Die Summe aller Flächeninhalte der Rechtecke bilden eine Untersumme. Sie ist stets eine untere Abschätzung des wahren Flächeninhalts. Der Flächeninhalt aller Rechtecke ist somit wie folgt."""
+
+# ╔═╡ 64662278-8e07-41fe-95f0-a436e82b6872
+transpose(diff(x_tab))*q.(x_tab[2:end])
+
+# ╔═╡ dfd9740d-41f4-423a-ab27-e8c9f5b3cf4d
+md"""Der Befehl `diff` berechnet in einer Spaltenmatrix den Abstand zwischen zwei benachbarten Einträgen. Der Befehl `transpose` berechnet die Transponierte einer Matrix. Aus einer Spaltenmatrix wird so eine Zeilenmatrix. Der Operator * ist hier als Matrixmultiplikation zu verstehen."""
+
+# ╔═╡ 36505af0-7745-40e7-8738-fadb64ed70ba
+md"""Zum Abschluss wollen wir noch den Flächeninhalt der Rechtecke in Abhängigkeit von der Zahl der Rechtecke untersuchen. Dazu schreiben wir eine Funktion `Fres_num`, die als Argument die Zahl der Rechtecke erhält."""
+
+# ╔═╡ f458b39d-8691-4080-8b96-3409719512c8
+function Fres_num(N::Int64)
+	x_tab = LinRange(0,L,N+1)
+	transpose(diff(x_tab))*q.(x_tab[2:end])
+end
+
+# ╔═╡ eefb78ca-9875-494b-8427-37ced5ccdc43
+begin 
+	plot(2:1:200,Fres_num,label=false,w=2,xlabel="N",ylabel="Fres [kN]",size=(500,300))
+	hline!([Fres],label=false,w=2)
+end
+
+# ╔═╡ 92862714-07b8-4ade-8a22-c0c93910b346
+md"""Man erkennt, dass die Untersumme gegen die analytische Lösung (hier $(round(Fres_analyt,digits=2)) kN) konvergiert, jedoch vergleichsweise langsam. Es gibt sehr viel effizientere Verfahren, um numerisch zu integrieren."""
+
+# ╔═╡ 975354df-6963-4141-8366-4cf995c2f563
+md"""
+### Anhang"""
+
+# ╔═╡ 3392c888-423a-4b0d-a520-83d9eb47f729
+begin 
+	plot(0:0.005*L:L,q,label=false,xlabel="x [m]",ylabel="q [kN/m]",w=2,color=:red,size=(500,300))
+	for j in 1:length(x_tab)
+		plot!([x_tab[j]; x_tab[j]], [0.0; q(x_tab[j])],label=false,color=:red)
+	end
+	plot!()
+	#savefig("ST_311_Streckenlast-Wurzel-Input.svg")
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1184,14 +1255,30 @@ version = "1.4.1+1"
 # ╠═f805e275-b2a3-42f0-b977-aa47ba816cdf
 # ╟─d4ee67b6-4599-48ea-9caa-8e570d1e4eef
 # ╟─fd4e9591-a07d-448d-9691-706992b07d7d
+# ╟─df2493cf-2908-4c32-ae04-2f1e5cbe4402
 # ╠═a63c7421-b650-4497-b527-0e4d474c5a2b
 # ╠═7397fe1b-488f-4134-89c2-0b8214ff70f3
+# ╟─7f2a18b2-696c-49a3-8748-945d3521a2c4
 # ╠═5f0704ec-5f41-4a4f-8e16-f89f81ef103d
 # ╠═ae08af2d-7a62-443f-bb43-4531648ed03f
 # ╟─536615bf-ebda-4153-bc32-929f6d0b3827
 # ╟─8fe3a69d-21e7-4be5-8625-6e6c06970e48
 # ╠═a083bb7f-8909-4115-930b-18feb06ec12b
 # ╟─0a393c5f-a18a-4b08-919d-19cd227346fe
-# ╠═9b842be6-f918-4cde-99b3-b7b487fdb4b8
+# ╟─9b842be6-f918-4cde-99b3-b7b487fdb4b8
+# ╟─6137c0e0-7f2d-406f-8d72-fb737c3646e7
+# ╠═ca821a65-e65c-41bd-ba67-37031b0761f6
+# ╟─16317d9e-3bca-4f98-a8fd-b928eddc73a5
+# ╠═7086637b-5776-446a-99f9-7cb66ba96503
+# ╠═e556c8ca-bbbe-4fb3-8fce-a769cfced0de
+# ╟─020c2473-1eda-432d-89b2-e936d4142aba
+# ╠═64662278-8e07-41fe-95f0-a436e82b6872
+# ╟─dfd9740d-41f4-423a-ab27-e8c9f5b3cf4d
+# ╟─36505af0-7745-40e7-8738-fadb64ed70ba
+# ╠═f458b39d-8691-4080-8b96-3409719512c8
+# ╠═eefb78ca-9875-494b-8427-37ced5ccdc43
+# ╟─92862714-07b8-4ade-8a22-c0c93910b346
+# ╟─975354df-6963-4141-8366-4cf995c2f563
+# ╠═3392c888-423a-4b0d-a520-83d9eb47f729
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
