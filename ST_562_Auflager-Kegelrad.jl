@@ -47,7 +47,7 @@ Wichtig: Das Aufstellen der Gleichgewichtsbedingungen sollte nie ohne das Erstel
 
 > Bevor Sie weiterlesen, sollten Sie eigenständig den Freischnitt gezeichnet und die Gleichgewichtsbedingungen formuliert haben.
 
-Die Gleichgewichtsbedingungen (hier Kräftegleichgewicht und Momentengleichgewicht bezüglich Lagerpunkt A) werden in der Funktion `ggb` zusammengefasst. Die Funktion hat zwei Argumente: `U` ist die Spaltenmatrix mit den sechs unbekannten Größen und `p` ist die `struct` mit den Parameterwerten. Warum sechs unbekannte Größen? Lager A ist ein Loslager und hat zwei Bestimmungsstücke (hier skalarwertige Komponenten in ``y``- und in ``z``-Richtung). Lager B ist ein Festlager und hat drei Bestimmungsstücke. Die sechste Unbekannte ist das Drehmoment um die ``x``-Achse, das am Punkt C über eine Kupplung abgegeben wird.
+Die Gleichgewichtsbedingungen (hier Kräftegleichgewicht und Momentengleichgewicht bezüglich Lagerpunkt A) werden in der Funktion `ggb` zusammengefasst. Die Funktion hat zwei Argumente: `u` ist die Spaltenmatrix mit den sechs unbekannten Größen und `p` ist die `struct` mit den Parameterwerten. Warum sechs unbekannte Größen? Lager A ist ein Loslager und hat zwei Bestimmungsstücke (hier skalarwertige Komponenten in ``y``- und in ``z``-Richtung). Lager B ist ein Festlager und hat drei Bestimmungsstücke. Die sechste Unbekannte ist das Drehmoment um die ``x``-Achse, das am Punkt C über eine Kupplung abgegeben wird.
 Es gilt also
 ```math
 \mathbf{u} = \left(F_{\mathrm{A}y},F_{\mathrm{A}z},F_{\mathrm{B}x},F_{\mathrm{B}y},F_{\mathrm{B}z},M_{\mathrm{Ab}}\right)^T\;.
@@ -56,7 +56,7 @@ Es gilt also
 
 # ╔═╡ c93be915-fefe-4f8e-bd94-63788e49fff2
 function ggb(u,p)
-	# Statisches Gleichgewicht liegt für gegebene Zahlenwerte U vor, wenn der Rückgabewerte res der Funktion eine Nullmatrix ist.
+	# Statisches Gleichgewicht liegt für gegebene Zahlenwerte u vor, wenn der Rückgabewerte res der Funktion eine Nullmatrix ist.
 	FA = [0.0; u[1:2]] # Lagerkraft in A
 	FB = u[3:5] # Lagerkraft in B
 	MAb = u[6] # Drehmoment am Abtrieb
@@ -73,7 +73,7 @@ md"""
 """
 
 # ╔═╡ b96b2a07-d4c3-4e9c-93f9-fd76629f0b80
-md"""Die Lösung der Gleichgewichtsbedingungen kann von Hand erfolgen. Wir wollen das Gleichungssystem numerisch mit dem Paket `NonlinearSolve` lösen. Dazu werden die drei Bestandteile der Aufgabe -- das Gleichungssystem (hier die Funktion `ggb`), der Starwert (hier `U0`) und die Parameter (hier `param`) -- zusammen als nichtlineares Problem definiert. Warum als nichtlineares Problem? Wir haben doch offensichtlich ein in den gesuchten Größen lineares Problem vor uns? Grundsätzlich ja. Die Gleichgewichtsbedingungen führen auf lineare Gleichungssysteme in den gesuchten Lagerreaktionen. Wir wollen uns aber die Arbeit ersparen, alle Kreuzprodukte auszuwerten und die Gleichungen anschließend in eine Koeffizientenmatrix und rechte Seite zu übertragen."""
+md"""Die Lösung der Gleichgewichtsbedingungen kann von Hand erfolgen. Wir wollen das Gleichungssystem numerisch mit dem Paket `NonlinearSolve` lösen. Dazu werden die drei Bestandteile der Aufgabe -- das Gleichungssystem (hier die Funktion `ggb`), der Starwert (hier `u0`) und die Parameter (hier `param`) -- zusammen als nichtlineares Problem definiert. Warum als nichtlineares Problem? Wir haben doch offensichtlich ein in den gesuchten Größen lineares Problem vor uns? Grundsätzlich ja. Die Gleichgewichtsbedingungen führen auf lineare Gleichungssysteme in den gesuchten Lagerreaktionen. Wir wollen uns aber die Arbeit ersparen, alle Kreuzprodukte auszuwerten und die Gleichungen anschließend in eine Koeffizientenmatrix und rechte Seite zu übertragen."""
 
 # ╔═╡ fa993370-2a6e-4eb1-b1c1-2e05ee0636dd
 md"""Als Startwert für die Nullstellensuche definieren wir eine Spaltenmatrix, die ausschließlich Nullen enthält. Da das Gleichungssystem linear ist, kommt dem Startwert keine größere Bedeutung zu."""
@@ -136,7 +136,7 @@ md"""Drehmoment am Abtrieb (in N m)"""
 Mab = sol[6]/1000
 
 # ╔═╡ f91beb0a-8ee3-49f1-8a62-2f6acd082e64
-md"""Die Radialkraft in Lager A beträgt $(round(FAr/1000,digits=2)) kN und in Lager B  $(round(FBr/1000,digits=2)) kN. Die Axialkraft im Lager B beträgt (betragsmäßig) $(round(abs(FBa)/1000,digits=2)) kN. Das Drehmoment am Abtrieb beträgt (betragsmäßig) $(round(abs(Mab),digits=2)) N m."""
+md"""**Antwort** Die Radialkraft in Lager A beträgt $(round(FAr/1000,digits=2)) kN und in Lager B  $(round(FBr/1000,digits=2)) kN. Die Axialkraft im Lager B beträgt (betragsmäßig) $(round(abs(FBa)/1000,digits=2)) kN. Das Drehmoment am Abtrieb beträgt (betragsmäßig) $(round(abs(Mab),digits=2)) N m."""
 
 # ╔═╡ a4fe213f-116b-4b4d-b8c9-46e479537721
 md"""
