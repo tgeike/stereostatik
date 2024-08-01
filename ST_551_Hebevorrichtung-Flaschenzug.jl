@@ -100,6 +100,26 @@ cramerFj(A(α1,β1),b,detA,2)
 # ╔═╡ 971b6765-9b37-4071-988a-b84c8e81d0cf
 md"""Offensichtlich ergeben sich die gleichen Lösungen wie beim ersten Lösungsweg."""
 
+# ╔═╡ 42763a2d-bdb3-4acd-ab3d-df8f443dc2fd
+md"""
+### Weiterführende Überlegungen: Statische Bestimmtheit
+Kann bei gegebenem Winkel ``\alpha`` der Winkel ``\beta`` beliebig gewählt werden? Wir untersuchen dazu die Determinante der Koeffizientenmatrix für ``\beta\in[-\pi/2;\pi/2]``."""
+
+# ╔═╡ a93c73d3-37e9-43ef-88b2-3afeb375ddce
+begin
+	plot(-0.5π:0.1:0.5π,β->det(A(α1,β)),size=(400,300),xlabel="β",ylabel="det A",w=2,label=false)
+	scatter!([-α1],[0],label=false)
+end
+
+# ╔═╡ 2cc7c0ad-1f11-4181-8eff-6b0b84eac1b6
+md"""Wenig überraschend ist die Determinante für ``\beta = -\alpha`` Null. Beide Stäbe liegen auf einer Geraden. In diesem Fall ist das System nicht statisch bestimmt."""
+
+# ╔═╡ 86b3cfb3-daa1-409a-acd3-6adc8d789f44
+A(α1,-α1)
+
+# ╔═╡ ab395c10-ea53-41ef-8973-4e76f8827a5a
+md"""Die beiden Zeilen der Koeffizientenmatrix ``\mathbf{A}`` sind offensichtlich linear abhängig, wenn ``\beta = -\alpha``."""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -1187,5 +1207,10 @@ version = "1.4.1+1"
 # ╟─aeeb3952-7602-445a-b9b5-ea2b9c21a581
 # ╠═158be368-dee1-4e85-90e4-57432df38e01
 # ╟─971b6765-9b37-4071-988a-b84c8e81d0cf
+# ╟─42763a2d-bdb3-4acd-ab3d-df8f443dc2fd
+# ╠═a93c73d3-37e9-43ef-88b2-3afeb375ddce
+# ╟─2cc7c0ad-1f11-4181-8eff-6b0b84eac1b6
+# ╠═86b3cfb3-daa1-409a-acd3-6adc8d789f44
+# ╟─ab395c10-ea53-41ef-8973-4e76f8827a5a
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
