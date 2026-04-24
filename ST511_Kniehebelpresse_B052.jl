@@ -21,7 +21,7 @@ Wir wollen später ein Diagramm erstellen, dass das Verhältnis ``F_\mathrm{P}/F
 
 # ╔═╡ 039632aa-4812-451f-a4c5-ae86062c5ba8
 md"""
-Die Lösung gelingt über zwei Freischnitte. Zum einen wird das Gelenk zwischen den Stäben (Punkt B) freigeschnitten und zum anderen der Pressenkörper. Auf die Freischnitte ist jeweils das Gleichgewicht der Kräfte anzuwenden. Am Gelenk sind dies zwei Gleichungen (beispielsweise in horizontaler Richtung und in vertikaler Richtung), die die beiden Stabkräfte liefern. Am Pressenkörper wird nur das Kräftegleichgewicht in vertikaler Richtung benötigt. Mit dem Kräftegleichgewicht in horizontaler Richtung könnte man bei Bedarf die Kontaktkraft in der Führung berechnen.
+Die Lösung gelingt über zwei Freischnitte. Zum einen wird das Gelenk (der Gelenkbolzen) zwischen den Stäben (Schwingen) freigeschnitten (wir nennen den Punkt B) und zum anderen der Pressenstößel. Auf die Freischnitte ist jeweils das Gleichgewicht der Kräfte anzuwenden. Am Gelenk sind dies zwei Gleichungen (beispielsweise in horizontaler Richtung und in vertikaler Richtung), die die beiden Stabkräfte liefern. Am Pressenstößel wird nur das Kräftegleichgewicht in vertikaler Richtung benötigt. Mit dem Kräftegleichgewicht in horizontaler Richtung könnte man bei Bedarf die Kontaktkraft in der Führung berechnen.
 """
 
 # ╔═╡ 6682e0a5-be3f-47c3-b239-e171e3a1f4a6
@@ -66,15 +66,21 @@ plot(φ_tab,V_tab,label=false,xlabel="Winkel φ [°]",ylabel="Faktor V [-]",lw=2
 
 # ╔═╡ cf5d7adb-6996-4c96-891e-6b095212b95e
 md"""
-Für den **Winkel von 1°** ergibt sich der **Vergrößerungsfaktor ``V`` zu $(round(V(deg2rad(1)),digits=2))**, für 5° zu $(round(V(deg2rad(5)),digits=2)). Man erkennt, dass die Presskraft (bei gleicher aufgebrachter Kraft) um so größer wird, je kleiner der Winkel ``\varphi`` wird. Theoretisch würde ``V\rightarrow\infty`` gelten, aber das System wird vorher versagen (beispielsweise durch Versagen der beiden Stäbe oder der Gelenke) oder das mittige Gelenk wird auf die andere Seite durchschlagen.
+Für den **Winkel von 1°** ergibt sich der **Vergrößerungsfaktor ``V`` zu $(round(V(deg2rad(1)),digits=2))**, für 5° zu $(round(V(deg2rad(5)),digits=2)). Man erkennt, dass die Presskraft (bei gleicher aufgebrachter Kraft) um so größer wird, je kleiner der Winkel ``\varphi`` wird. Theoretisch würde ``V\rightarrow\infty`` gelten, aber das System wird vorher versagen (beispielsweise durch Versagen der beiden Stäbe/Schwingen oder der Gelenke) oder das mittige Gelenk wird auf die andere Seite durchschlagen.
 """
 
 # ╔═╡ 7377dd53-20ae-456f-b899-d9e0c5ce5aa2
 md"""
 !!! task "Aufgabe"
-    Berechnen Sie die Größe der Stabkräfte.
+    Berechnen Sie die Größe der Stabkräfte (Kräfte in den Schwingen).
 
 Hinweis: Auf Druck beanspruchte Stäbe können versagen durch Knicken. In der Regel können (schlanke) Stäbe (aus Stahl) bei statischer Belastung auf Druck viel geringere Lasten ertragen als auf Zug.
+"""
+
+# ╔═╡ e2824205-6c40-4d35-a5d0-766ef17c3e37
+md"""
+!!! task "Zusatzaufgabe"
+    Wie groß ist die (Quer-)Kraft im Gelenkbolzen, die bei unzureichender Dimensionierung ein Abscheren des Bolzens verursachen würde?
 """
 
 # ╔═╡ 9d502097-2105-4dbd-b942-8b532da9b8ea
@@ -1256,6 +1262,7 @@ version = "1.13.0+0"
 # ╟─468d7561-f802-4f0f-8422-6666b28a0c2f
 # ╟─cf5d7adb-6996-4c96-891e-6b095212b95e
 # ╟─7377dd53-20ae-456f-b899-d9e0c5ce5aa2
+# ╟─e2824205-6c40-4d35-a5d0-766ef17c3e37
 # ╟─9d502097-2105-4dbd-b942-8b532da9b8ea
 # ╠═4b8990e4-b73d-45cb-88bd-b0876307e0cd
 # ╠═efeb3b05-2890-44ba-914e-2d273c719b85
