@@ -16,9 +16,15 @@ Es sollen die Lagerreaktionen bei einer Abtriebswelle eines Kegelradgetriebes be
 Zuerst laden wir die benötigten Pakete.
 """
 
+# ╔═╡ 228dbec1-bda9-4b55-afba-1a035b6631a6
+md"""
+![Bild](https://github.com/tgeike/stereostatik/blob/main/ST562_Kegelradgetriebe-Bild.png?raw=true)
+"""
+
 # ╔═╡ f2e8468d-304c-46c3-8271-e8091a620f11
 md"""
-### Schritt 1: Alle Parameter zusammentragen
+### Lagerreaktionen bestimmen
+#### Schritt 1: Alle Parameter zusammentragen
 Alle Parameter sollen in einer `struct` zusammengefasst werden. Als Kommentar ist jeweils die unterstellte Einheit angegeben. Hier wird vorerst die Struktur definiert. Die Befüllung mit den konkreten Zahlenwerten erfolgt im nächsten Schritt."""
 
 # ╔═╡ 1e6b3003-9161-43d0-9de5-2e0dfe99f10d
@@ -38,12 +44,11 @@ md"""Da alle Längen in mm und alle Kräfte in N angegeben sind, werden die Erge
 md"""Für den konkreten Fall werden nun die Parameter festgelegt."""
 
 # ╔═╡ dbc5436e-92e5-4d60-ae76-27ef06eedbdf
-#param = parameter(a=120.0,b=105.0,r=80.0,Ft=2000,Fa=676,Fr=275)
-param = parameter(a=140.0,b=85.0,r=80.0,Ft=1820,Fa=615,Fr=250)
+param = parameter(a=120.0,b=105.0,r=80.0,Ft=2000,Fa=676,Fr=275)
 
 # ╔═╡ 1391f513-79ee-4337-a43e-74e713077cbd
 md"""
-### Schritt 2: Gleichgewichtsbedingungen aufstellen und in Code übersetzen
+#### Schritt 2: Gleichgewichtsbedingungen aufstellen und in Code übersetzen
 Wichtig: Das Aufstellen der Gleichgewichtsbedingungen sollte nie ohne das Erstellen eines Freischnitts erfolgen.
 
 > Bevor Sie weiterlesen, sollten Sie eigenständig den Freischnitt gezeichnet und die Gleichgewichtsbedingungen formuliert haben.
@@ -54,6 +59,11 @@ Es gilt also
 \mathbf{u} = \left(F_{\mathrm{A}y},F_{\mathrm{A}z},F_{\mathrm{B}x},F_{\mathrm{B}y},F_{\mathrm{B}z},M_{\mathrm{Ab}}\right)^T\;.
 ```
 """ 
+
+# ╔═╡ fdc56239-8a08-4b4f-86e2-340d6c66e954
+md"""
+![Bild](https://github.com/tgeike/stereostatik/blob/main/ST562_Kegelradgetriebe-Freischnitt.png?raw=true)
+"""
 
 # ╔═╡ c93be915-fefe-4f8e-bd94-63788e49fff2
 function ggb(u,p)
@@ -66,11 +76,11 @@ function ggb(u,p)
 	Mres = cross([p.a;p.r;0.0],FZ) + cross([(p.a+p.b);0;0],FB) + [MAb;0.0;0.0] # Momentengleichgewicht
 	res = [Fres;Mres] # Spaltenmatrix mit 6 Zeilen
 	return res
-end
+end;
 
 # ╔═╡ 35d9c2d2-de86-4824-b011-2589eccf3b73
 md"""
-### Schritt 3: Gleichgewichtsbedingungen nach den Unbekannten auflösen
+#### Schritt 3: Gleichgewichtsbedingungen nach den Unbekannten auflösen
 """
 
 # ╔═╡ b96b2a07-d4c3-4e9c-93f9-fd76629f0b80
@@ -112,7 +122,7 @@ ggb(sol.u,param)
 
 # ╔═╡ d783671b-4a2b-46c5-8686-1e9a40d2cffd
 md"""
-### Schritt 4: Post Processing
+#### Schritt 4: Post Processing
 Aus den gegebenen Werten werden die Radialkräfte und Axialkräfte in den Lagern und das Drehmoment am Abtrieb berechnet."""
 
 # ╔═╡ d90d84e6-9b97-4a43-8141-b0cf5f2d63b4
@@ -141,7 +151,7 @@ md"""**Antwort** Die Radialkraft in Lager A beträgt $(round(FAr/1000,digits=2))
 
 # ╔═╡ a4fe213f-116b-4b4d-b8c9-46e479537721
 md"""
-### Alternatives Vorgehen zu Schritt 3
+#### Alternatives Vorgehen zu Schritt 3
 Wir haben die Gleichgewichtsbedingungen mit dem Löser aus dem Paket `NonlinearSolve` gelöst. Das hat uns erspart, weiter über die Struktur des Gleichungssystems nachzudenken. Auf der anderen Seite ist es aber reichlich übertrieben, einen Löser für ein nichtlineares Problem auf unsere linearen Gleichgewichtsbedingungen anzusetzen. Wir wollen daher als Alternative hier zeigen, wie man mühelos aus der Funktion `ggb` das zugehörige lineare Gleichungssystem in der Form
 ```math
 \mathbf{A}\mathbf{u} = \mathbf{b}
@@ -166,11 +176,24 @@ sol.u
 
 # ╔═╡ 9c8b2a60-9245-466b-8d26-5b6c63c36550
 md"""
-## Schnittlasten
+### Schnittlasten bestimmen
+Methode *Elementarer Freischnitt*
+"""
+
+# ╔═╡ f28f51c2-de0a-427b-9b2f-7baa159211a1
+md"""
+Zur Erinnerung: Freischnitt der Welle für die Berechnung der Auflagerreaktionen
+![Bild](https://github.com/tgeike/stereostatik/blob/main/ST562_Kegelradgetriebe-Freischnitt.png?raw=true)
 """
 
 # ╔═╡ 6f752273-a258-491b-897d-066e7f626ecf
 FA = [0;sol[1];sol[2]]
+
+# ╔═╡ fd237601-dd89-44df-b2f9-e1a5461f8f01
+md"""
+Freischnitt im Bereich 1 zwischen Lager A und Kegelrad:
+![Freischnitt](https://github.com/tgeike/stereostatik/blob/main/ST811_Kegelradgetriebe-Freischnitt-B1.png?raw=true)
+"""
 
 # ╔═╡ 5ab01da0-13e3-4ea2-a39c-86432e1ea834
 M1(x) = cross([x;0;0],FA);
@@ -2131,12 +2154,14 @@ version = "1.4.1+2"
 # ╔═╡ Cell order:
 # ╟─1f0fa310-429a-11ef-3e18-5bb86f4cb3e7
 # ╠═feb1555d-cd54-4659-8af5-f4899e7cee2c
+# ╟─228dbec1-bda9-4b55-afba-1a035b6631a6
 # ╟─f2e8468d-304c-46c3-8271-e8091a620f11
 # ╠═1e6b3003-9161-43d0-9de5-2e0dfe99f10d
 # ╟─ff361425-9884-4243-9e58-ff3466313f9c
 # ╟─6a4bbd85-8639-45e6-b8ba-7e91dc3c8664
 # ╠═dbc5436e-92e5-4d60-ae76-27ef06eedbdf
 # ╟─1391f513-79ee-4337-a43e-74e713077cbd
+# ╟─fdc56239-8a08-4b4f-86e2-340d6c66e954
 # ╠═c93be915-fefe-4f8e-bd94-63788e49fff2
 # ╟─35d9c2d2-de86-4824-b011-2589eccf3b73
 # ╟─b96b2a07-d4c3-4e9c-93f9-fd76629f0b80
@@ -2163,7 +2188,9 @@ version = "1.4.1+2"
 # ╠═ab07b0f1-d70a-4370-832f-f0c0dbc6075e
 # ╠═f0d52e7b-d4de-4019-a72f-030afe608aff
 # ╟─9c8b2a60-9245-466b-8d26-5b6c63c36550
+# ╟─f28f51c2-de0a-427b-9b2f-7baa159211a1
 # ╠═6f752273-a258-491b-897d-066e7f626ecf
+# ╟─fd237601-dd89-44df-b2f9-e1a5461f8f01
 # ╠═5ab01da0-13e3-4ea2-a39c-86432e1ea834
 # ╠═45cd69f2-565f-49a5-aed2-faaa98d4ff15
 # ╠═b29cbb48-76d1-47a1-b735-fa6cb4466d7f
