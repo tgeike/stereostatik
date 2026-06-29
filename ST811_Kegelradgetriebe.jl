@@ -10,8 +10,8 @@ using LinearAlgebra,NonlinearSolve,Plots
 # ╔═╡ 1f0fa310-429a-11ef-3e18-5bb86f4cb3e7
 md"""
 # Technische Berechnungen mit Julia
-## Auflagerreaktionen in der Abtriebswelle eines Kegelradgetriebes
-Es sollen die Lagerreaktionen bei einer Abtriebswelle eines Kegelradgetriebes bestimmt werden. Lager A ist ein Loslager, Lager B ein Festlager. Die Zahnkräfte in axialer, tangentialer und radialer Richtung sind bekannt. Neben den Lagerreaktionen ist das Drehmoment am Abtrieb gesucht. 
+## Auflagerreaktionen und Schnittmomente in der Abtriebswelle eines Kegelradgetriebes
+Es sollen die Lagerreaktionen bei einer Abtriebswelle eines Kegelradgetriebes bestimmt werden. Lager A ist ein Loslager, Lager B ein Festlager. Die Zahnkräfte in axialer, tangentialer und radialer Richtung sind bekannt. Neben den Lagerreaktionen ist das Drehmoment am Abtrieb gesucht. Anschließend soll das Schnittmoment (aufgeteilt in Biegemomente und Torsionsmoment) berechnet werden.
 
 Zuerst laden wir die benötigten Pakete.
 """
@@ -24,6 +24,9 @@ md"""
 # ╔═╡ f2e8468d-304c-46c3-8271-e8091a620f11
 md"""
 ### Lagerreaktionen bestimmen
+!!! task "Aufgabe"
+    Bevor Sie weiterlesen, sollen Sie eigenständig versuchen, die Aufgabe zu lösen. Lassen Sie sich ggf. vom GenAI-Tool Ihrer Wahl Tipps zum Lösungsansatz geben (nicht aber die komplette Lösung).
+
 #### Schritt 1: Alle Parameter zusammentragen
 Alle Parameter sollen in einer `struct` zusammengefasst werden. Als Kommentar ist jeweils die unterstellte Einheit angegeben. Hier wird vorerst die Struktur definiert. Die Befüllung mit den konkreten Zahlenwerten erfolgt im nächsten Schritt."""
 
@@ -176,8 +179,11 @@ sol.u
 
 # ╔═╡ 9c8b2a60-9245-466b-8d26-5b6c63c36550
 md"""
-### Schnittlasten bestimmen
+### Schnittmomente bestimmen
 Methode *Elementarer Freischnitt*
+
+!!! task "Aufgabe"
+    Bestimmen Sie Biegemoment und Torsionsmoment in der Welle zwischen den Lagern A und B? Welche Momente werden zwischen B und C übertragen?
 """
 
 # ╔═╡ f28f51c2-de0a-427b-9b2f-7baa159211a1
@@ -215,6 +221,12 @@ M(param.a)
 
 # ╔═╡ 99cd3ab2-dbdc-4f73-a151-5849fc9f4cf9
 M(param.a*0.999)
+
+# ╔═╡ dc86e4e0-f39a-47bb-89a3-a5b259a47c4a
+md"""
+!!! task "Aufgabe"
+    Berechnen Sie auch die Schnittkräfte (Querkräfte und Längskraft) für die Welle und erstellen Sie entsprechende Diagramme.
+"""
 
 # ╔═╡ 0c13bcf0-37a0-46fa-a894-7f4e7f215539
 md"""
@@ -2198,6 +2210,7 @@ version = "1.4.1+2"
 # ╠═deb8213c-3b6d-4789-88f3-ca5264360673
 # ╠═966d45f5-f261-405c-bc9d-157705e7025a
 # ╠═99cd3ab2-dbdc-4f73-a151-5849fc9f4cf9
+# ╟─dc86e4e0-f39a-47bb-89a3-a5b259a47c4a
 # ╟─0c13bcf0-37a0-46fa-a894-7f4e7f215539
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
