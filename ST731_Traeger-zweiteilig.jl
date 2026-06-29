@@ -43,7 +43,7 @@ Es sind drei Bereiche, AP, PB und BC, notwendig. Die Bereichsgrenze in B ist not
 
 # ╔═╡ 70f75320-9c00-4e12-973f-3692c0b2b0f6
 md"""
-### Ansätze für das Biegemoment aufstellen und Rand- und Übergangsbedingungen formulieren
+### Ansätze für das Biegemoment aufstellen und Querkraft als Ableitung definieren
 In den ersten beiden Bereichen, d. h. für ``0\le x\le a+b`` ist das Biegemoment stückweise linear, weil keine Streckenlast vorliegt, also ``q(x)=0`` zwischen A und B. Für ``x>a+b`` ist aufgrund der konstanten Streckenlast ein quadratischer Verlauf des Biegemomentes anzusetzen, wobei ``M_3''(x) = - q(x) = -q_0`` sein muss."""
 
 # ╔═╡ 0a986238-084d-4987-a689-c606a599f950
@@ -80,6 +80,7 @@ Q(x,u) = x < param.a ? Q1(x,u) : (x > param.a+param.b ? Q3(x,u) : Q2(x,u));
 
 # ╔═╡ 13e9f255-79a0-4842-94ac-966fd903401c
 md"""
+### Rand- und Übergangsbedingungen formulieren
 ![Freischnitt](https://github.com/tgeike/stereostatik/blob/main/ST731_Traeger-zweiteilig-Freischnitte.png?raw=true)"""
 
 # ╔═╡ 46386512-e8b4-4117-86ba-aa2ef7a0ce23
