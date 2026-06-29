@@ -43,7 +43,8 @@ Es sind drei Bereiche, AP, PB und BC, notwendig. Die Bereichsgrenze in B ist not
 
 # ╔═╡ 70f75320-9c00-4e12-973f-3692c0b2b0f6
 md"""
-### Ansätze für das Biegemoment aufstellen und Rand- und Übergangsbedingungen formulieren"""
+### Ansätze für das Biegemoment aufstellen und Rand- und Übergangsbedingungen formulieren
+In den ersten beiden Bereichen, d. h. für ``0\le x\le a+b`` ist das Biegemoment stückweise linear, weil keine Streckenlast vorliegt, also ``q(x)=0`` zwischen A und B. Für ``x>a+b`` ist aufgrund der konstanten Streckenlast ein quadratischer Verlauf des Biegemomentes anzusetzen, wobei ``M_3''(x) = - q(x) = -q_0`` sein muss."""
 
 # ╔═╡ 0a986238-084d-4987-a689-c606a599f950
 M1(x,u) = u[2]*x+u[1];
@@ -55,13 +56,17 @@ M2(x,u) = u[4]*x+u[3];
 M3(x,u) = -0.5*param.q0*x^2+u[6]*x+u[5];
 
 # ╔═╡ a79be0bc-ddba-4182-b7d5-7e91dda35d93
-md"""Die 6 unbekannten Integrationskonstanten sind in der Spaltenmatrix ``\underline{u}`` gespeichert."""
+md"""Die 6 unbekannten Integrationskonstanten sind in der Spaltenmatrix ``\underline{u}`` gespeichert. Für das Erstellen der Diagramme brauchen wir später die Funktion ``M(x)`` über die gesamte Balkenlänge."""
 
 # ╔═╡ 6939772a-bb1e-4bcc-ac6c-d13836a3596a
 M(x,u) = x < param.a ? M1(x,u) : (x > param.a+param.b ? M3(x,u) : M2(x,u));
 
 # ╔═╡ 55a3cb4b-5564-4411-985a-4e619a92fbc8
-md"""Die Querkraft ist die Ableitung des Biegemomentes nach der Balkenlängskoordinate ``x``."""
+md"""Die Querkraft ist die Ableitung des Biegemomentes nach der Balkenlängskoordinate ``x``,
+```math
+M'(x) = Q(x)\;.
+```
+"""
 
 # ╔═╡ 499ae7a9-2690-4ec0-8d12-b5df1072a054
 begin 
@@ -73,9 +78,13 @@ end;
 # ╔═╡ 6c7a66f5-117d-4717-a8cf-76d6f2c37fbb
 Q(x,u) = x < param.a ? Q1(x,u) : (x > param.a+param.b ? Q3(x,u) : Q2(x,u));
 
+# ╔═╡ 13e9f255-79a0-4842-94ac-966fd903401c
+md"""
+![Freischnitt](https://github.com/tgeike/stereostatik/blob/main/ST731_Traeger-zweiteilig-Freischnitte.png?raw=true)"""
+
 # ╔═╡ 46386512-e8b4-4117-86ba-aa2ef7a0ce23
 md"""
-Für die Bestimmung der 6 Integrationskonstanten werden 6 Rand- und Übergangsbedingungen benötigt. Diese ergeben sich fast immer durch Betrachtung der Ränder und der Bereichsgrenzen.
+Für die Bestimmung der 6 Integrationskonstanten werden 6 Rand- und Übergangsbedingungen benötigt. Diese ergeben sich fast immer durch Betrachtung der Ränder und der Bereichsgrenzen. Sinnvollerweise werden dazu Freischnitte der Übergänge und Ränder angefertigt.
 ```math
 0 = M_2(a) - M_1(a),\quad 0 = Q_2(a) - Q_1(a) + F,
 ```
@@ -1312,6 +1321,7 @@ version = "1.13.0+0"
 # ╟─55a3cb4b-5564-4411-985a-4e619a92fbc8
 # ╠═499ae7a9-2690-4ec0-8d12-b5df1072a054
 # ╠═6c7a66f5-117d-4717-a8cf-76d6f2c37fbb
+# ╟─13e9f255-79a0-4842-94ac-966fd903401c
 # ╟─46386512-e8b4-4117-86ba-aa2ef7a0ce23
 # ╠═e8ebf2b5-5583-4067-9078-1e1540743ca8
 # ╟─59435cd4-d605-443e-9d80-04fd4ad56962
